@@ -12,7 +12,7 @@ wss.on('connection', ws => {
         try {
 
             let parsedData = JSON.parse(data)
-            let message = {type: 'message', content: parsedData.content ? parse(escape(parsedData.content)) : '', author: parsedData.author ? parsedData.author : '', 'date': parsedData.date ? parsedData.date : new Date('11/13/1987')}
+            let message = {type: 'message', content: parsedData.content ? parse(escape(parsedData.content)) : '', author: parsedData.author ? parsedData.author : '', 'date': parsedData.date ? new Date(parsedData.date) : new Date('11/13/1987')}
 
             switch(parsedData.type) {
                 case 'sendMessage':
