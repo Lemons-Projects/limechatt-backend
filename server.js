@@ -1,6 +1,9 @@
 const {WebSocketServer, WebSocket} = require('ws')
 const escape = require('escape-html')
 const {parse} = require('marked')
+const {load} = require('cheerio')
+
+const trustedSites = ['https://limechatt.github.io', 'https://limechatt-slice.glitch.me']
 
 const wss = new WebSocketServer({port: 1050})
 
@@ -14,7 +17,7 @@ wss.on('connection', ws => {
             const parsedData = JSON.parse(data)
             const message = {
                 type: 'message', 
-                content: parsedData.content ? parse(escape((parsedData.content).substring(0, 850))) : '', 
+                content: parsedData.content ? safelyParseMarkdown((parsedData.content).substring(0, 850)) : '', 
                 author: parsedData.author ? parsedData.author : '', 
                 date: parsedData.date ? new Date(parsedData.date) : new Date('11/13/1987')
             }
@@ -50,4 +53,24 @@ function sendDataToAllClients(data, server) {
             client.send(data)
         }
     })
+}
+
+/**
+ * Parses the markdown as html
+ * @param {string} text 
+ */
+function safelyParseMarkdown(text) {
+    const parsedMarkdown = parse(escape(text))
+    const htmlParsed = load(parsedMarkdown, {}, false)
+    
+    const links = htmlParsed('a').toArray()
+
+    links.forEach((element) => {
+        const href = htmlParsed(element).attr('href')
+        if(href && !(trustedSites.some(link => href.startsWith(link)))) {
+            element.addClass('untrusted-site')
+        }
+    })
+
+    return htmlParsed.toString()
 }
