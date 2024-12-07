@@ -81,13 +81,14 @@ function safelyParseMarkdown(text) {
         const parsedElement = htmlParsed(element)
         const href = parsedElement.attr('href')
         if(!href || !isValidUrl(href)) return
-        if(!(trustedSites.some(link => href.startsWith(link)))) {
+        const trusted = trustedSites.some(link => href.startsWith(link))
+        if(!trusted) {
             parsedElement.addClass('untrusted-site')
         } else {
             parsedElement.addClass('trusted-site')
         }
-        if(isValidUrl(href)) {
-            htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname))}`)
+        if(isValidUrl(href) && !href.startsWith('javascript:')) {
+            htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname), trusted)}`)
         }
     })
 
@@ -102,8 +103,8 @@ function safelyParseMarkdown(text) {
     return htmlParsed.html()
 }
 
-function createEmbed(text) {
-    return `<div class="embed"><h5>${(text)}</h5></div>`
+function createEmbed(text, trusted) {
+    return `<div class="embed ${trusted ? 'trusted' : 'untrusted'}"><h5>${(text)}</h5></div>`
 }
 
 function isValidUrl(url) {
