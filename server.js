@@ -77,31 +77,33 @@ function safelyParseMarkdown(text) {
     const links = htmlParsed('a').toArray()
     const codeBlocks = htmlParsed('code').toArray()
 
-    for(const element of links) {
+    links.forEach((element) => {
         const parsedElement = htmlParsed(element)
         const href = parsedElement.attr('href')
-        if(!href || !isValidUrl(href)) continue
+        if(!href || !isValidUrl(href)) return
         if(!(trustedSites.some(link => href.startsWith(link)))) {
             parsedElement.addClass('untrusted-site')
         }
         if(isValidUrl(href)) {
             getTitle(href, (title) => {
-                htmlParsed('p').append(`<br>${createEmbed(title)}`)
+                const embed = createEmbed(title)
+                htmlParsed('p').after(embed)
             })
         }
-    }
+    })
 
     codeBlocks.forEach(element => {
         const parsedElement = htmlParsed(element)
-
-        if(parsedElement.hasClass('language-spoiler')) {
+        if (parsedElement.hasClass('language-spoiler')) {
             parsedElement.addClass('spoilered')
             parsedElement.attr('onclick', 'this.classList.toggle(\'show\')')
         }
     })
 
+    // Return the final HTML content
     return htmlParsed.html()
 }
+
 
 function fetchText(url) {
     return fetch(url)
@@ -111,7 +113,7 @@ function fetchText(url) {
 }
 
 function getTitle(url, callback) {
-    if(!isValidUrl(url)) return ''
+    if(!isValidUrl(url)) return callback('')
     fetchText(url)
         .then((text) => {
             const page = load(text)
