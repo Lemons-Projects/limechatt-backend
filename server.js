@@ -29,7 +29,7 @@ wss.on('connection', ws => {
             const message = {
                 type: 'message', 
                 content: parsedData.content ? safelyParseMarkdown((parsedData.content).substring(0, 850)) : '', 
-                author: parsedData.author ? parsedData.author : '', 
+                author: parsedData.author ? (parsedData.author).substring(0, 25) : '', 
                 date: parsedData.date ? new Date(parsedData.date) : new Date('11/13/1987')
             }
 
