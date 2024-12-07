@@ -10,14 +10,13 @@ let message_limit = 750
 wss.on('connection', ws => {
     ws.on('message', data => {
         try {
-
+            
             const parsedData = JSON.parse(data)
             const message = {
                 type: 'message', 
                 content: parsedData.content ? parse(escape(parsedData.content)) : '', 
                 author: parsedData.author ? parsedData.author : '', 
-                date: parsedData.date ? new Date(parsedData.date) : new Date('11/13/1987'),
-                attachmentURI: parsedData.attachmentURI ? parsedData.attachmentURI : ''
+                date: parsedData.date ? new Date(parsedData.date) : new Date('11/13/1987')
             }
 
             switch(parsedData.type) {
