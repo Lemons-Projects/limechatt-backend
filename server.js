@@ -3,6 +3,7 @@ const {WebSocketServer, WebSocket} = require('ws')
 const wss = new WebSocketServer({port: 1050})
 
 let messages = []
+let message_limit = 750
 
 wss.on('connection', ws => {
     ws.on('message', data => {
@@ -14,6 +15,10 @@ wss.on('connection', ws => {
             switch(parsedData.type) {
                 case 'sendMessage':
                     messages.push(message)
+
+                    if(messages.length > message_limit) {
+                        messages.shift()
+                    }
 
                     sendDataToAllClients(JSON.stringify(message), wss)
                     break
