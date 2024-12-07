@@ -3,7 +3,17 @@ const escape = require('escape-html')
 const {parse} = require('marked')
 const {load} = require('cheerio')
 
-const trustedSites = ['https://limechatt.github.io', 'https://limechatt-slice.glitch.me']
+const trustedSites = [
+    'https://limechatt.github.io',
+    'https://limechatt-slice.glitch.me',
+    'https://developer.mozzila.org',
+    'https://reactjs.org',
+    'https://vuejs.org',
+    'https://github.org',
+    'https://npmjs.com',
+    'https://youtube.com',
+    'https://filegarden.com'
+]
 
 const wss = new WebSocketServer({port: 1050})
 
