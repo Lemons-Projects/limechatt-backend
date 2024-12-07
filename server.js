@@ -66,11 +66,12 @@ function safelyParseMarkdown(text) {
     const links = htmlParsed('a').toArray()
 
     links.forEach((element) => {
-        const href = htmlParsed(element).attr('href')
+        const parsedElement = htmlParsed(element)
+        const href = parsedElement.attr('href')
         if(href && !(trustedSites.some(link => href.startsWith(link)))) {
-            element.addClass('untrusted-site')
+            parsedElement.addClass('untrusted-site')
         }
     })
 
-    return htmlParsed.toString()
+    return htmlParsed.html()
 }
