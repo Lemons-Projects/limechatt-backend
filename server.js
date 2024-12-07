@@ -2,6 +2,7 @@ const {WebSocketServer, WebSocket} = require('ws')
 const escape = require('escape-html')
 const {parse} = require('marked')
 const {load} = require('cheerio')
+const { Cheerio } = require('cheerio')
 
 const trustedSites = [
     'https://limechatt.github.io',
@@ -76,13 +77,17 @@ function safelyParseMarkdown(text) {
     const links = htmlParsed('a').toArray()
     const codeBlocks = htmlParsed('code').toArray()
 
-    links.forEach((element) => {
+    for(const element of links) {
         const parsedElement = htmlParsed(element)
         const href = parsedElement.attr('href')
-        if(href && !(trustedSites.some(link => href.startsWith(link)))) {
+        if(!href || !isValidUrl(href)) continue
+        if(!(trustedSites.some(link => href.startsWith(link)))) {
             parsedElement.addClass('untrusted-site')
         }
-    })
+        if(isValidUrl(href)) {
+            htmlParsed('p').append(`<br>${createEmbed(getTitle(href))}`)
+        }
+    }
 
     codeBlocks.forEach(element => {
         const parsedElement = htmlParsed(element)
@@ -94,4 +99,38 @@ function safelyParseMarkdown(text) {
     })
 
     return htmlParsed.html()
+}
+
+function fetchText(url) {
+    return fetch(url)
+        .then(res => res.text())
+        .then(res => {return res})
+        .catch(err => {console.error(err);return ''})
+}
+
+function getTitle(url) {
+    if(!isValidUrl(url)) return ''
+    let fetchedText = '<title>A</title>';
+    try {
+        fetchText(url)
+            .then((text) => {fetchedText = text})
+        const page = load(fetchedText)
+        return page('title').text()
+    } catch(err) {
+        console.error
+        return ''
+    }
+}
+
+function createEmbed(text) {
+    return `<div class="embed"><h5>${(text)}</h5></div>`
+}
+
+function isValidUrl(url) {
+    try {
+        new URL(url)
+        return true
+    } catch (err) {
+        return false
+    }
 }
