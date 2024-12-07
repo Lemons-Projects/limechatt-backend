@@ -19,7 +19,7 @@ wss.on('connection', ws => {
                     break
                 
                 case 'getMessages':
-                    ws.send(JSON.stringify(messages))
+                    ws.send(JSON.stringify({response: messages}))
                     break
             }
         } catch (error) {
