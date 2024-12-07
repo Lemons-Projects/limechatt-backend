@@ -64,12 +64,22 @@ function safelyParseMarkdown(text) {
     const htmlParsed = load(parsedMarkdown, {}, false)
     
     const links = htmlParsed('a').toArray()
+    const codeBlocks = htmlParsed('code').toArray()
 
     links.forEach((element) => {
         const parsedElement = htmlParsed(element)
         const href = parsedElement.attr('href')
         if(href && !(trustedSites.some(link => href.startsWith(link)))) {
             parsedElement.addClass('untrusted-site')
+        }
+    })
+
+    codeBlocks.forEach(element => {
+        const parsedElement = htmlParsed(element)
+
+        if(parsedElement.hasClass('language-spoiler')) {
+            parsedElement.addClass('spoilered')
+            parsedElement.attr('onclick', 'this.classList.toggle(\'show\')')
         }
     })
 
