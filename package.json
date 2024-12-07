@@ -10,6 +10,8 @@
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
+    "escape-html": "^1.0.3",
+    "marked": "^15.0.3",
     "ws": "^8.18.0"
   }
 }
