@@ -1,0 +1,15 @@
+{
+  "name": "limechatt-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "description": "",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
