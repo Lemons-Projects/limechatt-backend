@@ -114,8 +114,10 @@ function getTitle(url) {
     try {
         fetchText(url)
             .then((text) => {fetchedText = text})
-        const page = load(fetchedText)
-        return page('title').text()
+            .then(text => {
+                const page = load(fetchedText)
+                return page('title').text()
+            })
     } catch(err) {
         console.error
         return ''
