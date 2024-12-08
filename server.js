@@ -116,7 +116,7 @@
             description = $('meta[property="og:description"]').attr('content')
             imageURL = $('meta[property="og:image"]').attr('content')
         } catch {}
-        if(title && description && imageURL) {
+        if(title || description || imageURL) {
             return `<div class="embed ${isTrusted}">
                         <h4 class="embed-title">${escape(title)}</h4><br>
                         <h5 class="embed-description">${escape(description)}</h5><br>
