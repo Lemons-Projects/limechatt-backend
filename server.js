@@ -109,19 +109,24 @@
         let title = ''
         let description = ''
         let imageURL = ''
+        let large = false
         try {
             const siteContent = await fetchText(url)
             const $ = load(siteContent)
             title = $('meta[property="og:title"]').attr('content')
             description = $('meta[property="og:description"]').attr('content')
             imageURL = $('meta[property="og:image"]').attr('content')
+            large = $('meta[name="twitter:card"]').attr('content') == 'summary_large_image'
         } catch {}
         if(title || description || imageURL) {
-            return `<div class="embed ${isTrusted}">
+            const embed = `<div class="embed ${isTrusted}">
                         <h4 class="embed-title">${escape(title)}</h4><br>
                         <h5 class="embed-description">${escape(description)}</h5><br>
                         <img class="embed-image" src="${escape(imageURL)}">
                     </div>`
+            const parsedEmbed = load(embed, {}, false)
+            if(large) parsedEmbed('img').addClass('large-img')
+            return parsedEmbed.html()
         } else {return ''}
     }
 
