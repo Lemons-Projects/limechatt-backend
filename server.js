@@ -85,10 +85,7 @@ function safelyParseMarkdown(text) {
             parsedElement.addClass('untrusted-site')
         }
         if(isValidUrl(href)) {
-            getTitle(href, (title) => {
-                const embed = createEmbed(title)
-                htmlParsed('p').after(embed)
-            })
+            htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname)}`)
         }
     })
 
@@ -102,28 +99,6 @@ function safelyParseMarkdown(text) {
 
     // Return the final HTML content
     return htmlParsed.html()
-}
-
-
-function fetchText(url) {
-    return fetch(url)
-        .then(res => res.text())
-        .then(res => {return res})
-        .catch(err => {console.error(err);return ''})
-}
-
-function getTitle(url, callback) {
-    if(!isValidUrl(url)) return callback('')
-    fetchText(url)
-        .then((text) => {
-            const page = load(text)
-            const title = page('title').text()
-            callback(title)
-        })
-        .catch((err) => {
-            console.error(err)
-            callback('')
-        })
 }
 
 function createEmbed(text) {
