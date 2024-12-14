@@ -85,7 +85,7 @@ function safelyParseMarkdown(text) {
             parsedElement.addClass('untrusted-site')
         }
         if(isValidUrl(href)) {
-            htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname)}`)
+            htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname))}`)
         }
     })
 
