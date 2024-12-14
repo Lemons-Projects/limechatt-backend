@@ -73,7 +73,7 @@ function sendDataToAllClients(data, server) {
 function safelyParseMarkdown(text) {
     const parsedMarkdown = parse(escape(text))
     const htmlParsed = load(parsedMarkdown, {}, false)
-    
+
     const links = htmlParsed('a').toArray()
     const codeBlocks = htmlParsed('code').toArray()
 
@@ -83,6 +83,8 @@ function safelyParseMarkdown(text) {
         if(!href || !isValidUrl(href)) return
         if(!(trustedSites.some(link => href.startsWith(link)))) {
             parsedElement.addClass('untrusted-site')
+        } else {
+            parsedElement.addClass('trusted-site')
         }
         if(isValidUrl(href)) {
             htmlParsed('p').append(`<br>${createEmbed((new URL(href).hostname))}`)
@@ -97,7 +99,6 @@ function safelyParseMarkdown(text) {
         }
     })
 
-    // Return the final HTML content
     return htmlParsed.html()
 }
 
