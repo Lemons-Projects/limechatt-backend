@@ -89,7 +89,7 @@
                 parsedElement.addClass('trusted-site')
             }
             if(isValidUrl(href) && !href.startsWith('javascript:')) {
-                parsedElement.after(`<br>${await createEmbedFromURL(trusted, href)}`)
+                htmlParsed('p').append(`<br>${await createEmbedFromURL(trusted, href)}`)
             }
         }
 
