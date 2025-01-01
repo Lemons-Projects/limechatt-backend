@@ -120,7 +120,7 @@
         } catch {}
         if(title || description || imageURL) {
             const embed = `<div class="embed ${isTrusted}">
-                        <h4 class="embed-title">${escape(title)}</h4><br>
+                        <a class="embed-title">${escape(title)} href="${url}"</a><br>
                         <h5 class="embed-description">${escape(description)}</h5><br>
                         <img class="embed-image" src="${escape(imageURL)}">
                     </div>`
